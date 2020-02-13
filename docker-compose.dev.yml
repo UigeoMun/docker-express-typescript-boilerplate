@@ -12,6 +12,19 @@ services:
     ports:
       - "27017:27017"
 
+  db:
+    image: postgres
+    container_name: postgeres-dev
+    env_file:
+      - ./db.env
+    restart: always
+    networks:
+      - dev-network
+    volumes:
+      - ./data/dev/postgres:/data/db
+    ports:
+      - "5432:5432"
+
 networks:
   dev-network:
     driver: bridge

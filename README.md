@@ -22,7 +22,7 @@ A few things to note in the project:
 * **[Containerized Mongo for development](#development)** - Starts a local mongo container with data persistence across runs.
 * **[Mongo Connection Helper](https://github.com/sidhantpanda/docker-express-typescript-boilerplate/blob/master/src/mongo-connection.ts)** - A helper class to connect to MongoDB reliably.
 * **[Middleware for easier async/await](https://github.com/sidhantpanda/docker-express-typescript-boilerplate/blob/master/src/middleware/handle-error-middleware.ts)** - Catches errors from routes and throws them to express error handler to prevent app crash due to uncaught errors.
-* **[OpenAPI 3.0 Spec](https://github.com/sidhantpanda/docker-express-typescript-boilerplate/blob/master/openapi.json)** - A starter template to get started with API documentation using OpenAPI 3.0. This API spec is also available when running the development server at `http://localhost:3000/dev/api-docs`
+* **[OpenAPI 3.0 Spec](https://github.com/sidhantpanda/docker-express-typescript-boilerplate/blob/master/openapi.json)** - A starter template to get started with API documentation using OpenAPI 3.0. This API spec is also available when running the development server at `http://localhost:8000/dev/api-docs`
 * **[.env file for configuration](#environment)** - Change server config like app port, mongo url etc
 * **[Winston Logger](#logging)** - Uses winston as the logger for the application.
 * **ESLINT** - ESLINT is configured for linting.
@@ -61,8 +61,8 @@ Starting the dev server also starts MongoDB as a service in a docker container u
 $ npm run dev
 ```
 Running the above commands results in 
-* 🌏**API Server** running at `http://localhost:3000`
-* ⚙️**Swagger UI** at `http://localhost:3000/dev/api-docs`
+* 🌏**API Server** running at `http://localhost:8000`
+* ⚙️**Swagger UI** at `http://localhost:8000/dev/api-docs`
 * 🛢️**MongoDB** running at `mongodb://localhost:27017`
 
 ## Packaging and Deployment
@@ -76,7 +76,7 @@ $ docker-compose up
 
 ```
 $ docker build -t api-server .
-$ docker run -t -i -p 3000:3000 api-server
+$ docker run -t -i -p 8000:8000 api-server
 ```
 
 #### 3. Build and run
@@ -93,7 +93,7 @@ To edit environment variables, create a file with name `.env` and copy the conte
 | Var Name  | Type  | Default | Description  |
 |---|---|---|---|
 | NODE_ENV  | string  | `development` |API runtime environment. eg: `staging`  |
-|  PORT | number  | `3000` | Port to run the API server on |
+|  PORT | number  | `8000` | Port to run the API server on |
 |  MONGO_URL | string  | `mongodb://localhost:27017/books` | URL for MongoDB |
 
 ## Logging
