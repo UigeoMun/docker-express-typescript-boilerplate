@@ -1,71 +1,64 @@
-import pg,{ Client, Pool, PoolConfig, ClientConfig, PoolClient, QueryConfig } from 'pg';
+import pg, {
+  Pool, PoolConfig, ClientConfig, PoolClient, QueryConfig
+} from 'pg';
 import logger from './logger';
-
 
 
 export default class PgConnection {
     private readonly gpUrl : string;
+
     private pool : Pool;
+
     private config : PoolConfig;
-    constructor( config : PoolConfig ) {
 
-        console.log("PG CONNECT")
+    constructor(config : PoolConfig) {
+      this.config = config;
 
-        this.config = config;
-        this.pool = new Pool(this.config)
-        this.pool.on( "connect", this.onConnect )
-        this.pool.on( "acquire", this.onAquire )
-        this.pool.on( "remove", this.onRemove)
-        this.pool.on( "error", this.onError )
-        
+      this.pool = new Pool(this.config);
+      this.pool.on('connect', this.onConnect);
+      this.pool.on('acquire', this.onAquire);
+      this.pool.on('remove', this.onRemove);
+      this.pool.on('error', this.onError);
     }
 
     public getClient = async () => {
-        logger.log({
-            level : 'info',
-            message : `Connecting to postgresql at ${this.config.host}`
-        })
+      try {
         const client = await this.pool.connect();
         return client;
+      } catch (err) {
+        throw new Error(err.message);
+      }
     }
 
-    public singleQuery = async ( query : QueryConfig ) => {
-        try{
-            const result = await this.pool.query(query)
-            return result;
-        }catch(error){
-            throw new Error(error.message)
-        }
-
+    public singleQuery = async (query : QueryConfig) => {
+      try {
+        const result = await this.pool.query(query);
+        return result;
+      } catch (error) {
+        throw new Error(error.message);
+      }
     }
 
 
     public getPool = () => this.pool;
 
-    private onConnect = ( client : PoolClient ) => {
-        //TODO
-        logger.log({
-            level : 'debug',
-            message : 'connect'
-        });
+    private onConnect = (client : PoolClient) => {
+      // TODO
+      logger.info('postgres DB Connected');
     }
 
-    private onRemove = ( client : PoolClient ) =>{
-        //TODO
-        console.log(client)
+    private onRemove = (client : PoolClient) => {
+      // TODO
+      logger.info('DB Connection Removed');
     }
 
-    private onAquire = ( client : PoolClient ) => {
-        //TODO
-        console.log(client)
+    private onAquire = (client : PoolClient) => {
+      // TODO
+      logger.info('New Client Aquired');
     }
 
-    private onError = ( error : Error, client : PoolClient ) => { 
-        //TODO
-        logger.log({
-            level : 'error',
-            message : 'fail to connect'
-        });
-        console.log(error)
+    private onError = (error : Error, client : PoolClient) => {
+      // TODO
+      logger.error('Connection Fail', error);
     }
 }

@@ -1,7 +1,7 @@
 {
-  "name": "deepbio-NDA-backend",
+  "name": "deepbio-nda-backend",
   "version": "0.0.1",
-  "description": "typescript-express based api server",
+  "description": "deepbio nda system backend api server",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sidhantpanda/express-typescript-boilerplate.git"

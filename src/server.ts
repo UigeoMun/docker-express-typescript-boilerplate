@@ -14,32 +14,40 @@ logger.log({
   message: process.env.POSTGRES_HOST
 });
 const mongoConnection = new MongoConnection(process.env.MONGO_URL);
-const pgConnection = new PgConnection({
+
+export const pgConnection = new PgConnection({
   user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_UPASSWORD,
+  password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT)
 });
 
-
-if (process.env.MONGO_URL == null) {
+if (process.env.POSTGRES_HOST == null) {
   logger.log({
     level: 'error',
-    message: 'MONGO_URL not specified in environment'
+    message: 'POSTGRES_HOST not specified in environment'
   });
   process.exit(1);
 } else {
-  mongoConnection.connect(() => {
-    app.listen(app.get('port'), (): void => {
-      console.log('\x1b[36m%s\x1b[0m', // eslint-disable-line
-        `🌏 Express server started at http://localhost:${app.get('port')}`);
-      if (process.env.NODE_ENV === 'development') {
+  mongoConnection.connect(() => { console.log('connect'); });
+  pgConnection.singleQuery({
+    name: 'DB-TIME',
+    text: 'SELECT NOW()',
+    values: []
+  })
+    .then((con) => {
+      app.listen(app.get('port'), () => {
+        console.log(con.rows[0], `🌏 Express server started at http://localhost:${app.get('port')}`);
+        if (process.env.NODE_ENV === 'development') {
         console.log('\x1b[36m%s\x1b[0m', // eslint-disable-line
-          `⚙️  Swagger UI hosted at http://localhost:${app.get('port')}/dev/api-docs`);
-      }
+            `⚙️  Swagger UI hosted at http://localhost:${app.get('port')}/dev/api-docs`);
+        }
+      });
+    })
+    .catch((err) => {
+      console.log(err, 'FAIL TO START EXPRESS SERVER');
     });
-  });
 }
 
 // Close the Mongoose connection, when receiving SIGINT
