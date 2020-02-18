@@ -39,6 +39,14 @@ export default class PgConnection {
       }
     }
 
+    public end = async () => {
+      try {
+        await this.pool.end();
+      } catch (err) {
+        throw new Error(err.message);
+      }
+    }
+
 
     public getPool = () => this.pool;
 

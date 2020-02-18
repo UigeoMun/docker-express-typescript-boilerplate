@@ -5,7 +5,6 @@ import handleErrorMiddleware from '../../middleware/handle-error-middleware';
 
 const all: RequestHandler = async (_req, res) => {
   try {
-    console.log("ALL")
     const result = await getRoles();
     res.status(200).json({ roles: result.rows });
   } catch (err) {

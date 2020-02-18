@@ -3,6 +3,7 @@ import { createRole } from '../../models/Roles';
 
 const add: RequestHandler = async (req, res) => {
   const { name } = req.body;
+
   try {
     const result = await createRole(name);
     res.status(200).json({ roles: result.rows });

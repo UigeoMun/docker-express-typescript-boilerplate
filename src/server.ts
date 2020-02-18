@@ -13,7 +13,7 @@ logger.log({
   level: 'debug',
   message: process.env.POSTGRES_HOST
 });
-const mongoConnection = new MongoConnection(process.env.MONGO_URL);
+// const mongoConnection = new MongoConnection(process.env.MONGO_URL);
 
 export const pgConnection = new PgConnection({
   user: process.env.POSTGRES_USER,
@@ -30,7 +30,7 @@ if (process.env.POSTGRES_HOST == null) {
   });
   process.exit(1);
 } else {
-  mongoConnection.connect(() => { console.log('connect'); });
+  // mongoConnection.connect(() => { console.log('connect'); });
   pgConnection.singleQuery({
     name: 'DB-TIME',
     text: 'SELECT NOW()',
@@ -53,14 +53,23 @@ if (process.env.POSTGRES_HOST == null) {
 // Close the Mongoose connection, when receiving SIGINT
 process.on('SIGINT', () => {
   logger.info('Gracefully shutting down');
-  mongoConnection.close((err) => {
-    if (err) {
-      logger.log({
-        level: 'error',
-        message: 'Error shutting closing mongo connection',
-        error: err
-      });
+  // mongoConnection.close((err) => {
+  //   if (err) {
+  //     logger.log({
+  //       level: 'error',
+  //       message: 'Error shutting closing mongo connection',
+  //       error: err
+  //     });
+  //   }
+  //   process.exit(0);
+  // });
+  pgConnection.end().then(
+    (rst) => {
+      logger.info('DB Connection end');
     }
-    process.exit(0);
-  });
+  ).catch(
+    (err) => {
+      logger.error('FAIL to end db connection'.concat(err.message));
+    }
+  );
 });

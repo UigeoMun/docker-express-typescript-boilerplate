@@ -19,7 +19,7 @@ export const getRoles = async () => {
 export const createRole = async (name : string) => {
   const query : QueryConfig = {
     name: 'createRole',
-    text: 'INSERT INTO role (name) VALUES ( \'$1\' )',
+    text: 'INSERT INTO role (name) VALUES ( $1 )',
     values: [name]
   };
   try {
@@ -47,7 +47,7 @@ export const deleteRole = async (id : number) => {
 export const updateRole = async (id : number, payload : { name : string }) => {
   const query : QueryConfig = {
     name: 'updateRole',
-    text: 'UPDATE role SET name=\'$1\' WHERE id=$2',
+    text: 'UPDATE role SET name=$1 WHERE id=$2',
     values: [payload.name, id]
   };
   try {

@@ -18,9 +18,56 @@
     {
       "name": "book",
       "description": "Books APIs"
+    },
+    {
+      "name" : "role",
+      "description" : "Autholity assign of Deepbio NDA system user"
     }
   ],
   "paths": {
+    "/api/roles/" : {
+      "get" : {
+        "tags" : [ "role" ],
+        "summary" : "Retrive whole list of roles",
+        "operationId" : "retrive-all-roles",
+        "responses" : {
+          "200": {
+            "description": "Book was added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type" : "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref" : "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "role" ],
+        "summary" : "Add new role",
+        "operationId" : "add-new-role"
+      },
+      "patch" : {
+        "tags" : [ "role" ],
+        "summary" : "Update specific role info",
+        "operationId" : "update-role"
+      },
+      "delete" : {
+        "tags" : [ "role" ],
+        "summary" : "Delete specific role",
+        "operationId" : "delete-role"
+      }
+    },
     "/book/add": {
       "post": {
         "tags": [
@@ -140,7 +187,32 @@
     }
   },
   "components": {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
+    "responses" : {
+      "UnauthorizedError" : {
+          "description" : "Access token is missing or invalid"
+      }
+    },
     "schemas": {
+      "Role" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type": "string",
+            "example": "12"
+          },
+          "name": {
+            "type": "string",
+            "example": "manager"
+          }
+        }
+      },
       "DraftBookSchema": {
         "type": "object",
         "properties": {
@@ -170,4 +242,5 @@
       }
     }
   }
+  
 }
